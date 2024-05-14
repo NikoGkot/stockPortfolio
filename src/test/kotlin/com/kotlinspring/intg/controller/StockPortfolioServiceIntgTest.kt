@@ -2,14 +2,14 @@ package com.kotlinspring.intg.controller
 
 import com.kotlinspring.dto.StockDTO
 import com.kotlinspring.repository.StockRepository
-import com.kotlinspring.util.PostgreSQLContainerInitializer
+import com.kotlinspring.util.stockEntityList
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
 
@@ -17,7 +17,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
 
-class StockControllerIntgTest : PostgreSQLContainerInitializer(){
+class StockPortfolioServiceIntgTest {
 
     @Autowired
     lateinit var webTestClient: WebTestClient
@@ -28,25 +28,43 @@ class StockControllerIntgTest : PostgreSQLContainerInitializer(){
     @BeforeEach
     fun setUp(){
         stockRepository.deleteAll()
+
+        val stocks = stockEntityList()
+        stockRepository.saveAll(stocks)
+
     }
 
     @Test
-    fun addStock(){
-        val stockDTO = StockDTO( "VUSA")
+    fun addStock() {
+        val stockDTO= StockDTO("VUSA")
 
         val savedStockDTO = webTestClient
-                .post()
-                .uri("/stocks")
-                .bodyValue(stockDTO)
-                .exchange()
-                .expectStatus().isCreated
-                .expectBody(StockDTO::class.java)
-                .returnResult()
-                .responseBody
+            .post()
+            .uri("stocks")
+            .bodyValue(stockDTO)
+            .exchange()
+            .expectStatus().isCreated
+            .expectBody(StockDTO::class.java)
+            .returnResult()
+            .responseBody
 
         Assertions.assertTrue {
             savedStockDTO!!.tickerSymbol == "VUSA"
         }
+
     }
 
+    @Test
+    fun retrieveAllStocks(){
+        val stockDTOs = webTestClient
+            .get()
+            .uri("stocks")
+            .exchange()
+            .expectBodyList(StockDTO::class.java)
+            .returnResult()
+            .responseBody
+
+        println("stockDTOs : $stockDTOs")
+        assertEquals(3, stockDTOs!!.size)
+    }
 }

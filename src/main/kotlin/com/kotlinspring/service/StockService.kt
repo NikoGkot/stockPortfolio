@@ -26,9 +26,16 @@ class StockService(
         }
     }
 
-    fun retrieveAllStocks(): List<StockDTO>{
-        val stocks = stockRepository.findAll()
+    fun retrieveAllStocks(stockTickerSymbol: String?): List<StockDTO>{
 
-        return stocks.map{StockDTO(it.tickerSymbol)}
+        val stocks = stockTickerSymbol?.let{
+            stockRepository.findByTickerSymbol(stockTickerSymbol)
+        }?: stockRepository.findAll()
+//        val stocks = stockRepository.findAll()
+        return stocks
+            .map{
+                StockDTO(it.tickerSymbol)
+            }
     }
 }
+

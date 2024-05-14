@@ -10,3 +10,8 @@ data class Stock (
         @Id
         val tickerSymbol: String
 )
+{
+override fun toString(): String{
+        return "Stock(ticker symbol='$tickerSymbol')"
+}
+}

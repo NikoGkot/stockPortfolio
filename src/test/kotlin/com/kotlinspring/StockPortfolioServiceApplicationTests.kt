@@ -2,7 +2,9 @@ package com.kotlinspring
 
 import com.kotlinspring.dto.StockDTO
 import com.kotlinspring.entity.Stock
+import com.kotlinspring.repository.StockRepository
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -18,6 +20,15 @@ class StockPortfolioServiceApplicationTests {
 
 	@Autowired
 	lateinit var webTestClient: WebTestClient
+
+	@Autowired
+	lateinit var stockRepository: StockRepository
+
+	@BeforeEach
+	fun setUp(){
+		stockRepository.deleteAll()
+
+	}
 
 	@Test
 	fun addStock() {
