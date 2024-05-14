@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.web.util.UriComponentsBuilder
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -66,5 +67,24 @@ class StockPortfolioServiceIntgTest {
 
         println("stockDTOs : $stockDTOs")
         assertEquals(3, stockDTOs!!.size)
+    }
+
+    @Test
+    fun retrieveAllStocks_ByTickerSymbol(){
+        val uri = UriComponentsBuilder.fromUriString("stocks")
+            .queryParam("stock_tickerSymbol", "EQQQ")
+            .toUriString()
+
+        val stockDTOs = webTestClient
+            .get()
+            .uri(uri)
+            .exchange()
+            .expectStatus().isOk
+            .expectBodyList(StockDTO::class.java)
+            .returnResult()
+            .responseBody
+
+        println("stockDTOs : $stockDTOs")
+        assertEquals(1, stockDTOs!!.size)
     }
 }
