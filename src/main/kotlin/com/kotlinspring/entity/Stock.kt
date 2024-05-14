@@ -8,7 +8,8 @@ import jakarta.persistence.Table
 @Table(name="stocks")
 data class Stock (
         @Id
-        val tickerSymbol: String
+        val tickerSymbol : String,
+        var companyName : String
 )
 {
 override fun toString(): String{

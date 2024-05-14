@@ -11,16 +11,28 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("stocks")
 @Validated
-class StockController (val stockService: StockService) {
+class StockController(val stockService: StockService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun addStock(@RequestBody @Valid stockDTO: StockDTO): StockDTO{
+    fun addStock(@RequestBody @Valid stockDTO: StockDTO): StockDTO {
         return stockService.addStock(stockDTO)
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    fun retrieveAllCourses(@RequestParam("stock_tickerSymbol", required = false) stockTickerSymbol: String?): List<StockDTO>
-            = stockService.retrieveAllStocks(stockTickerSymbol)
+    fun retrieveAllStocks(
+        @RequestParam(
+            "stock_tickerSymbol",
+            required = false
+        ) stockTickerSymbol: String?
+    ): List<StockDTO> = stockService.retrieveAllStocks(stockTickerSymbol)
+
+    @PutMapping("/{stock_tickerSymbol}")
+    fun updateStock(
+        @RequestBody stockDTO: StockDTO,
+        @PathVariable("stock_tickerSymbol") stockTickerSymbol: String
+    ): StockDTO = stockService.updateStock(stockTickerSymbol, stockDTO)
+
+
 }

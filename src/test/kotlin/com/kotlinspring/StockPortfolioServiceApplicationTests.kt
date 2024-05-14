@@ -32,7 +32,7 @@ class StockPortfolioServiceApplicationTests {
 
 	@Test
 	fun addStock() {
-		val stockDTO= StockDTO("VUSA")
+		val stockDTO= StockDTO("VUSA","TestCompanyName")
 
 		val savedStockDTO = webTestClient
 			.post()

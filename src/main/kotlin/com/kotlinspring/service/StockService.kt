@@ -2,6 +2,7 @@ package com.kotlinspring.service
 
 import com.kotlinspring.dto.StockDTO
 import com.kotlinspring.entity.Stock
+import com.kotlinspring.exception.StockNotFoundException
 import com.kotlinspring.repository.StockRepository
 import mu.KLogging
 import org.springframework.stereotype.Service
@@ -15,14 +16,14 @@ class StockService(
     fun addStock(stockDTO: StockDTO): StockDTO {
 
         val stockEntity = stockDTO.let {
-            Stock(it.tickerSymbol)
+            Stock(it.tickerSymbol, it.companyName)
         }
 
         stockRepository.save(stockEntity)
 
         logger.info { "Saved stock is: $stockEntity" }
         return stockEntity.let {
-            StockDTO(it.tickerSymbol)
+            StockDTO(it.tickerSymbol, it.companyName)
         }
     }
 
@@ -34,8 +35,23 @@ class StockService(
 //        val stocks = stockRepository.findAll()
         return stocks
             .map{
-                StockDTO(it.tickerSymbol)
+                StockDTO(it.tickerSymbol, it.companyName)
             }
+    }
+
+    fun updateStock(stockTickerSymbol: String, stockDTO: StockDTO) :StockDTO {
+        val existingStock = stockRepository.findById(stockTickerSymbol)
+
+        return if(existingStock.isPresent){
+            existingStock.get()
+                .let {
+                    it.companyName = stockDTO.companyName
+                    stockRepository.save(it)
+                    StockDTO(it.tickerSymbol, it.companyName)
+                }
+        }else{
+            throw StockNotFoundException("No stock found for ticker symbol: $stockTickerSymbol")
+        }
     }
 }
 

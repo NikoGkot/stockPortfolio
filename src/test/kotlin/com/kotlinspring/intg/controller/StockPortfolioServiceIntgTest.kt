@@ -1,6 +1,7 @@
 package com.kotlinspring.intg.controller
 
 import com.kotlinspring.dto.StockDTO
+import com.kotlinspring.entity.Stock
 import com.kotlinspring.repository.StockRepository
 import com.kotlinspring.util.stockEntityList
 import org.junit.jupiter.api.Assertions
@@ -27,7 +28,7 @@ class StockPortfolioServiceIntgTest {
     lateinit var stockRepository: StockRepository
 
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         stockRepository.deleteAll()
 
         val stocks = stockEntityList()
@@ -37,7 +38,7 @@ class StockPortfolioServiceIntgTest {
 
     @Test
     fun addStock() {
-        val stockDTO= StockDTO("VUSA")
+        val stockDTO = StockDTO("TestStockTicker", "TestCompanyName")
 
         val savedStockDTO = webTestClient
             .post()
@@ -50,13 +51,13 @@ class StockPortfolioServiceIntgTest {
             .responseBody
 
         Assertions.assertTrue {
-            savedStockDTO!!.tickerSymbol == "VUSA"
+            savedStockDTO!!.tickerSymbol == "TestStockTicker"
         }
 
     }
 
     @Test
-    fun retrieveAllStocks(){
+    fun retrieveAllStocks() {
         val stockDTOs = webTestClient
             .get()
             .uri("stocks")
@@ -70,7 +71,7 @@ class StockPortfolioServiceIntgTest {
     }
 
     @Test
-    fun retrieveAllStocks_ByTickerSymbol(){
+    fun retrieveAllStocks_ByTickerSymbol() {
         val uri = UriComponentsBuilder.fromUriString("stocks")
             .queryParam("stock_tickerSymbol", "EQQQ")
             .toUriString()
@@ -87,4 +88,28 @@ class StockPortfolioServiceIntgTest {
         println("stockDTOs : $stockDTOs")
         assertEquals(1, stockDTOs!!.size)
     }
+
+    @Test
+    fun updateStock() {
+        val stockEntity = Stock(
+            "TestTickerSymbol", "TestCompanyName"
+        )
+        stockRepository.save(stockEntity)
+        val updatedStockDTO = StockDTO(
+            "TestTickerSymbol", "TestCompanyName1"
+        )
+
+        val updatedStock = webTestClient
+            .put()
+            .uri("stocks/{stock_tickerSymbol}", stockEntity.tickerSymbol)
+            .bodyValue(updatedStockDTO)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(StockDTO::class.java)
+            .returnResult()
+            .responseBody
+
+        assertEquals("TestCompanyName1", updatedStock?.companyName)
+    }
+
 }
