@@ -1,6 +1,10 @@
 package com.kotlinspring.dto
 
-data class StockDTO (
+import java.math.BigDecimal
+
+data class StockDTO(
         val tickerSymbol: String,
-        var companyName: String
+        var companyName: String,
+        var buyPrice : Double,
+        var quantity : Double
 )

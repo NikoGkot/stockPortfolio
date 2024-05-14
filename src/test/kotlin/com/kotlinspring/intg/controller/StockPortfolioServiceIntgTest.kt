@@ -3,6 +3,7 @@ package com.kotlinspring.intg.controller
 import com.kotlinspring.dto.StockDTO
 import com.kotlinspring.entity.Stock
 import com.kotlinspring.repository.StockRepository
+import com.kotlinspring.util.StockBuilder
 import com.kotlinspring.util.stockEntityList
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -36,9 +37,12 @@ class StockPortfolioServiceIntgTest {
 
     }
 
+    //    Builder
+    val stockEntity = StockBuilder().build()
+    val stockDTO = StockBuilder().buildDTO()
+
     @Test
     fun addStock() {
-        val stockDTO = StockDTO("TestStockTicker", "TestCompanyName")
 
         val savedStockDTO = webTestClient
             .post()
@@ -51,7 +55,7 @@ class StockPortfolioServiceIntgTest {
             .responseBody
 
         Assertions.assertTrue {
-            savedStockDTO!!.tickerSymbol == "TestStockTicker"
+            savedStockDTO!!.tickerSymbol == stockDTO.tickerSymbol
         }
 
     }
@@ -72,6 +76,7 @@ class StockPortfolioServiceIntgTest {
 
     @Test
     fun retrieveAllStocks_ByTickerSymbol() {
+
         val uri = UriComponentsBuilder.fromUriString("stocks")
             .queryParam("stock_tickerSymbol", "EQQQ")
             .toUriString()
@@ -91,13 +96,12 @@ class StockPortfolioServiceIntgTest {
 
     @Test
     fun updateStock() {
-        val stockEntity = Stock(
-            "TestTickerSymbol", "TestCompanyName"
-        )
+
+
         stockRepository.save(stockEntity)
-        val updatedStockDTO = StockDTO(
-            "TestTickerSymbol", "TestCompanyName1"
-        )
+
+        val updatedStockDTO = StockBuilder().tickerSymbol("TestTickerSymbol").companyName("TestCompanyName1").build()
+
 
         val updatedStock = webTestClient
             .put()
@@ -114,12 +118,6 @@ class StockPortfolioServiceIntgTest {
 
     @Test
     fun deleteStock() {
-
-
-        val stockEntity = Stock(
-            "TestTickerSymbol",
-            "TestCompanyName"
-        )
 
         stockRepository.save(stockEntity)
         webTestClient

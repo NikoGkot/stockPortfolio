@@ -16,14 +16,14 @@ class StockService(
     fun addStock(stockDTO: StockDTO): StockDTO {
 
         val stockEntity = stockDTO.let {
-            Stock(it.tickerSymbol, it.companyName)
+            Stock(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)
         }
 
         stockRepository.save(stockEntity)
 
         logger.info { "Saved stock is: $stockEntity" }
         return stockEntity.let {
-            StockDTO(it.tickerSymbol, it.companyName)
+            StockDTO(it.tickerSymbol, it.companyName,it.buyPrice, it.quantity)
         }
     }
 
@@ -35,7 +35,7 @@ class StockService(
 //        val stocks = stockRepository.findAll()
         return stocks
             .map{
-                StockDTO(it.tickerSymbol, it.companyName)
+                StockDTO(it.tickerSymbol, it.companyName,it.buyPrice, it.quantity)
             }
     }
 
@@ -47,7 +47,7 @@ class StockService(
                 .let {
                     it.companyName = stockDTO.companyName
                     stockRepository.save(it)
-                    StockDTO(it.tickerSymbol, it.companyName)
+                    StockDTO(it.tickerSymbol, it.companyName,it.buyPrice, it.quantity)
                 }
         }else{
             throw StockNotFoundException("No stock found for ticker symbol: $stockTickerSymbol")

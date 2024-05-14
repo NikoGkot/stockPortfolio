@@ -17,36 +17,5 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 class StockPortfolioServiceApplicationTests {
 
-	@Autowired
-	lateinit var webTestClient: WebTestClient
-
-	@Autowired
-	lateinit var stockRepository: StockRepository
-
-	@BeforeEach
-	fun setUp(){
-		stockRepository.deleteAll()
-
-	}
-
-	@Test
-	fun addStock() {
-		val stockDTO= StockDTO("VUSA","TestCompanyName")
-
-		val savedStockDTO = webTestClient
-			.post()
-			.uri("stocks")
-			.bodyValue(stockDTO)
-			.exchange()
-			.expectStatus().isCreated
-			.expectBody(StockDTO::class.java)
-			.returnResult()
-			.responseBody
-
-		assertTrue{
-			savedStockDTO!!.tickerSymbol=="VUSA"
-		}
-
-	}
 
 }
