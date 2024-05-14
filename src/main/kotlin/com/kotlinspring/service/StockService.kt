@@ -53,5 +53,17 @@ class StockService(
             throw StockNotFoundException("No stock found for ticker symbol: $stockTickerSymbol")
         }
     }
+
+    fun deleteStock(stockTickerSymbol: String): Any {
+        val existingStock = stockRepository.findById(stockTickerSymbol)
+
+        return if(existingStock.isPresent){
+            existingStock.get().let {
+                stockRepository.deleteById(stockTickerSymbol)
+            }
+        }else{
+            throw StockNotFoundException("No stock found for ticker symbol: $stockTickerSymbol")
+        }
+    }
 }
 

@@ -34,5 +34,11 @@ class StockController(val stockService: StockService) {
         @PathVariable("stock_tickerSymbol") stockTickerSymbol: String
     ): StockDTO = stockService.updateStock(stockTickerSymbol, stockDTO)
 
+    @DeleteMapping("/{stock_tickerSymbol}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteStock(
+        @PathVariable("stock_tickerSymbol") stockTickerSymbol: String
+    ) = stockService.deleteStock(stockTickerSymbol)
+
 
 }

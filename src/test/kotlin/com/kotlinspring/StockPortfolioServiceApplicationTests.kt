@@ -1,7 +1,6 @@
 package com.kotlinspring
 
 import com.kotlinspring.dto.StockDTO
-import com.kotlinspring.entity.Stock
 import com.kotlinspring.repository.StockRepository
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

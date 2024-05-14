@@ -112,4 +112,22 @@ class StockPortfolioServiceIntgTest {
         assertEquals("TestCompanyName1", updatedStock?.companyName)
     }
 
+    @Test
+    fun deleteStock() {
+
+
+        val stockEntity = Stock(
+            "TestTickerSymbol",
+            "TestCompanyName"
+        )
+
+        stockRepository.save(stockEntity)
+        webTestClient
+            .delete()
+            .uri("/stocks/{stock_tickerSymbol}", stockEntity.tickerSymbol)
+            .exchange()
+            .expectStatus().isNoContent
+
+    }
+
 }
