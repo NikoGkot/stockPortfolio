@@ -6,6 +6,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import javax.security.auth.kerberos.KerberosTicket
 
 
 @RestController
@@ -27,6 +28,11 @@ class StockController(val stockService: StockService) {
             required = false
         ) stockTickerSymbol: String?
     ): List<StockDTO> = stockService.retrieveAllStocks(stockTickerSymbol)
+
+    @GetMapping("/{tickerSymbol}")
+    fun getStockByTickerSymbol(@PathVariable tickerSymbol: String):List<StockDTO>{
+        return stockService.getStockByTickerSymbol(tickerSymbol)
+    }
 
     @PutMapping("/{stock_tickerSymbol}")
     fun updateStock(

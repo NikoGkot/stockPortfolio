@@ -100,7 +100,7 @@ class StockPortfolioServiceIntgTest {
 
         stockRepository.save(stockEntity)
 
-        val updatedStockDTO = StockBuilder().tickerSymbol("TestTickerSymbol").companyName("TestCompanyName1").build()
+        val updatedStockDTO = StockBuilder().tickerSymbol("TestTickerSymbol").companyName("TestCompanyName1").buildDTO()
 
 
         val updatedStock = webTestClient

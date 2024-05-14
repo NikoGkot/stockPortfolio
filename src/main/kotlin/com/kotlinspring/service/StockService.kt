@@ -39,6 +39,12 @@ class StockService(
             }
     }
 
+    fun getStockByTickerSymbol(tickerSymbol: String): List<StockDTO> {
+        val stock = stockRepository.findByTickerSymbol(tickerSymbol)
+            ?: throw Exception("Stock not found") // Handle not found case appropriately
+        return stock.map {StockDTO(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)}
+    }
+
     fun updateStock(stockTickerSymbol: String, stockDTO: StockDTO) :StockDTO {
         val existingStock = stockRepository.findById(stockTickerSymbol)
 
@@ -46,6 +52,8 @@ class StockService(
             existingStock.get()
                 .let {
                     it.companyName = stockDTO.companyName
+                    it.buyPrice = stockDTO.buyPrice
+                    it.quantity = stockDTO.quantity
                     stockRepository.save(it)
                     StockDTO(it.tickerSymbol, it.companyName,it.buyPrice, it.quantity)
                 }
