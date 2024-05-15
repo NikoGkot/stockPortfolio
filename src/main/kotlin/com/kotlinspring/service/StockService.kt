@@ -1,6 +1,7 @@
 package com.kotlinspring.service
 
 import com.kotlinspring.dto.StockDTO
+import com.kotlinspring.dto.toDTO
 import com.kotlinspring.entity.Stock
 import com.kotlinspring.exception.InsufficientStockQuantityException
 import com.kotlinspring.exception.StockNotFoundException
@@ -25,9 +26,7 @@ class StockService(
         stockRepository.save(stockEntity)
 
         logger.info { "Saved stock is: $stockEntity" }
-        return stockEntity.let {
-            StockDTO(it.tickerSymbol, it.companyName, it.price, it.quantity)
-        }
+        return stockEntity.toDTO()
     }
 
     fun retrieveAllStocks(): List<StockDTO> {
@@ -38,14 +37,14 @@ class StockService(
         val stocks = stockRepository.findAll()
         return stocks
             .map {
-                StockDTO(it.tickerSymbol, it.companyName, it.price, it.quantity)
+                StockDTO(it.tickerSymbol, it.companyName, it.price, it.quantity, it.totalValue)
             }
     }
 
     fun getStockByTickerSymbol(tickerSymbol: String): StockDTO {
         val stock = stockRepository.findByTickerSymbol(tickerSymbol)
             ?: throw StockNotFoundException("No stock found for ticker symbol: $tickerSymbol")
-        return StockDTO(stock.tickerSymbol, stock.companyName, stock.price, stock.quantity)
+        return stock.toDTO()
     }
 
     fun updateStock(stockTickerSymbol: String, stockDTO: StockDTO): StockDTO {
