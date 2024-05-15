@@ -7,6 +7,7 @@ import com.kotlinspring.util.StockBuilder
 import com.kotlinspring.util.stockEntityList
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -58,6 +59,26 @@ class StockPortfolioServiceIntgTest {
             savedStockDTO!!.tickerSymbol == stockDTO.tickerSymbol
         }
 
+    }
+
+    @Test
+    fun addStockWithoutBuyPrice() {
+        val stockDTOWithoutBuyPrice = StockDTO(
+            tickerSymbol = "AAA",
+            companyName = "Alpha Inc."
+        )
+
+        val savedStockDTO = webTestClient
+            .post()
+            .uri("stocks")
+            .bodyValue(stockDTOWithoutBuyPrice)
+            .exchange()
+            .expectStatus().isCreated
+            .expectBody(StockDTO::class.java)
+            .returnResult()
+            .responseBody
+
+        assertTrue(savedStockDTO!!.tickerSymbol == stockDTOWithoutBuyPrice.tickerSymbol && savedStockDTO.buyPrice == 0.0 && savedStockDTO.quantity == 0.0)
     }
 
     @Test
