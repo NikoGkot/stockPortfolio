@@ -17,7 +17,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -28,5 +28,5 @@ spring:
     console:
       enabled: true
 server:
-  port: 5439
+  port: 8080
 message: Hello from default profile
