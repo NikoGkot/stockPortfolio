@@ -1,0 +1,9 @@
+Login screen and user db
+
+Prepopulated db for demo/testing etc. CSV file
+
+Χρειάζομαι ένα table που θα έχει το portfolio . Θα μπορουν να υπάρχουν πολλά portfolio μέσα στα οποία θα μπορεί ο χρήστης να στείλει τις μετοχές του.
+
+Ένα άλλο table με τα transactions. Από εκεί θα υπολογίζεται πλέον το avg price της μετοχής καθώς και το current value 
+
+Δυνατότητα export/import csv file των transactions 
