@@ -4,12 +4,14 @@ import com.kotlinspring.dto.StockDTO
 import com.kotlinspring.entity.Stock
 import com.kotlinspring.exception.StockNotFoundException
 import com.kotlinspring.repository.StockRepository
+import jakarta.transaction.Transactional
 import mu.KLogging
 import org.springframework.stereotype.Service
 
 @Service
 class StockService(
-        val stockRepository: StockRepository) {
+    val stockRepository: StockRepository
+) {
 
     companion object : KLogging()
 
@@ -23,41 +25,41 @@ class StockService(
 
         logger.info { "Saved stock is: $stockEntity" }
         return stockEntity.let {
-            StockDTO(it.tickerSymbol, it.companyName,it.buyPrice, it.quantity)
+            StockDTO(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)
         }
     }
 
-    fun retrieveAllStocks(stockTickerSymbol: String?): List<StockDTO>{
+    fun retrieveAllStocks(): List<StockDTO> {
 
-        val stocks = stockTickerSymbol?.let{
-            stockRepository.findByTickerSymbol(stockTickerSymbol)
-        }?: stockRepository.findAll()
-//        val stocks = stockRepository.findAll()
+//        val stocks = stockTickerSymbol?.let {
+//            stockRepository.findByTickerSymbol(stockTickerSymbol)
+//        } ?: stockRepository.findAll()
+        val stocks = stockRepository.findAll()
         return stocks
-            .map{
-                StockDTO(it.tickerSymbol, it.companyName,it.buyPrice, it.quantity)
+            .map {
+                StockDTO(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)
             }
     }
 
-    fun getStockByTickerSymbol(tickerSymbol: String): List<StockDTO> {
+    fun getStockByTickerSymbol(tickerSymbol: String): StockDTO {
         val stock = stockRepository.findByTickerSymbol(tickerSymbol)
             ?: throw Exception("Stock not found") // Handle not found case appropriately
-        return stock.map {StockDTO(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)}
+        return StockDTO(stock.tickerSymbol, stock.companyName, stock.buyPrice, stock.quantity)
     }
 
-    fun updateStock(stockTickerSymbol: String, stockDTO: StockDTO) :StockDTO {
+    fun updateStock(stockTickerSymbol: String, stockDTO: StockDTO): StockDTO {
         val existingStock = stockRepository.findById(stockTickerSymbol)
 
-        return if(existingStock.isPresent){
+        return if (existingStock.isPresent) {
             existingStock.get()
                 .let {
                     it.companyName = stockDTO.companyName
                     it.buyPrice = stockDTO.buyPrice
                     it.quantity = stockDTO.quantity
                     stockRepository.save(it)
-                    StockDTO(it.tickerSymbol, it.companyName,it.buyPrice, it.quantity)
+                    StockDTO(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)
                 }
-        }else{
+        } else {
             throw StockNotFoundException("No stock found for ticker symbol: $stockTickerSymbol")
         }
     }
@@ -65,13 +67,38 @@ class StockService(
     fun deleteStock(stockTickerSymbol: String): Any {
         val existingStock = stockRepository.findById(stockTickerSymbol)
 
-        return if(existingStock.isPresent){
+        return if (existingStock.isPresent) {
             existingStock.get().let {
                 stockRepository.deleteById(stockTickerSymbol)
             }
-        }else{
+        } else {
             throw StockNotFoundException("No stock found for ticker symbol: $stockTickerSymbol")
         }
     }
+
+    //Secondary functions
+    @Transactional
+    fun buyStock(tickerSymbol: String, stockDTO: StockDTO): StockDTO {
+        val existingStock = stockRepository.findByTickerSymbol(tickerSymbol)
+            ?: throw StockNotFoundException("No stock found for ticker symbol: $tickerSymbol")
+
+        // Update the existing stock with the new buy price and quantity
+        val newTotalQuantity = existingStock.quantity + stockDTO.quantity
+        val newAveragePrice = ((existingStock.buyPrice * existingStock.quantity) +
+                (stockDTO.buyPrice * stockDTO.quantity)) / newTotalQuantity
+
+        existingStock.quantity = newTotalQuantity
+        existingStock.buyPrice = newAveragePrice
+
+        stockRepository.save(existingStock)
+
+        return StockDTO(
+            tickerSymbol = existingStock.tickerSymbol,
+            companyName = existingStock.companyName,
+            buyPrice = existingStock.buyPrice,
+            quantity = existingStock.quantity
+        )
+    }
+
 }
 

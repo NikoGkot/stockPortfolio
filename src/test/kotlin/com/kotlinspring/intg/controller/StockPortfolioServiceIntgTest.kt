@@ -117,11 +117,9 @@ class StockPortfolioServiceIntgTest {
 
     @Test
     fun updateStock() {
-
-
         stockRepository.save(stockEntity)
 
-        val updatedStockDTO = StockBuilder().tickerSymbol("TestTickerSymbol").companyName("TestCompanyName1").buildDTO()
+        val updatedStockDTO = StockBuilder().companyName("TestCompanyName1").buildDTO()
 
 
         val updatedStock = webTestClient
@@ -143,10 +141,33 @@ class StockPortfolioServiceIntgTest {
         stockRepository.save(stockEntity)
         webTestClient
             .delete()
-            .uri("/stocks/{stock_tickerSymbol}", stockEntity.tickerSymbol)
+            .uri("/stocks/{tickerSymbol}", stockEntity.tickerSymbol)
             .exchange()
             .expectStatus().isNoContent
 
+    }
+
+    @Test
+    fun buyStock() {
+
+        val stockEntity = StockBuilder().buyPrice(0.0).quantity(0.0).build()
+        stockRepository.save(stockEntity)
+        val existingStockTickerSymbol = stockEntity.tickerSymbol
+        val stockDTO = StockBuilder().tickerSymbol(existingStockTickerSymbol).buyPrice(150.0).quantity(10.0).buildDTO()
+
+        val responseStockDTO = webTestClient
+            .put()
+            .uri("/stocks/{tickerSymbol}/buy", existingStockTickerSymbol)
+            .bodyValue(stockDTO)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(StockDTO::class.java)
+            .returnResult()
+            .responseBody
+
+        assertEquals(stockDTO.tickerSymbol, responseStockDTO!!.tickerSymbol)
+        assertEquals(stockDTO.buyPrice, responseStockDTO.buyPrice)
+        assertEquals(stockDTO.quantity, responseStockDTO.quantity)
     }
 
 }

@@ -14,6 +14,8 @@ import javax.security.auth.kerberos.KerberosTicket
 @Validated
 class StockController(val stockService: StockService) {
 
+    //Basic Mappings
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addStock(@RequestBody @Valid stockDTO: StockDTO): StockDTO {
@@ -22,15 +24,10 @@ class StockController(val stockService: StockService) {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    fun retrieveAllStocks(
-        @RequestParam(
-            "stock_tickerSymbol",
-            required = false
-        ) stockTickerSymbol: String?
-    ): List<StockDTO> = stockService.retrieveAllStocks(stockTickerSymbol)
+    fun retrieveAllStocks(): List<StockDTO> = stockService.retrieveAllStocks()
 
     @GetMapping("/{tickerSymbol}")
-    fun getStockByTickerSymbol(@PathVariable tickerSymbol: String):List<StockDTO>{
+    fun getStockByTickerSymbol(@PathVariable tickerSymbol: String): StockDTO {
         return stockService.getStockByTickerSymbol(tickerSymbol)
     }
 
@@ -40,11 +37,22 @@ class StockController(val stockService: StockService) {
         @PathVariable("stock_tickerSymbol") stockTickerSymbol: String
     ): StockDTO = stockService.updateStock(stockTickerSymbol, stockDTO)
 
-    @DeleteMapping("/{stock_tickerSymbol}")
+    @DeleteMapping("/{tickerSymbol}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteStock(
-        @PathVariable("stock_tickerSymbol") stockTickerSymbol: String
-    ) = stockService.deleteStock(stockTickerSymbol)
+        @PathVariable tickerSymbol: String
+    ) = stockService.deleteStock(tickerSymbol)
+
+    //Secondary Mappings
+
+    @PutMapping("/{tickerSymbol}/buy")
+    @ResponseStatus(HttpStatus.OK)
+    fun buyStock(
+        @PathVariable tickerSymbol: String,
+        @RequestBody @Valid stockDTO: StockDTO
+    ): StockDTO {
+        return stockService.buyStock(tickerSymbol, stockDTO)
+    }
 
 
 }
