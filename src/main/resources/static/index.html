@@ -14,17 +14,18 @@
       <table id="stocks-table">
         <thead>
           <tr>
-            <th>Ticker Symbol</th>
-            <th>Company Name</th>
-            <th>Buy Price</th>
-            <th>Quantity</th>
-            <th>Total Value</th>
+            <th data-column="tickerSymbol">Ticker Symbol</th>
+            <th data-column="companyName">Company Name</th>
+            <th data-column="buyPrice">Buy Price</th>
+            <th data-column="quantity">Quantity</th>
+            <th data-column="totalValue">Total Value</th>
           </tr>
         </thead>
         <tbody>
           <!-- Stock rows will be inserted here by JavaScript -->
         </tbody>
       </table>
+      <button type="button">Add Stock</button>
     </main>
     <script src="app.js"></script>
   </body>

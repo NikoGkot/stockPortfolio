@@ -14,13 +14,14 @@ async function displayStocks() {
       '<tr><td colspan="5">No stocks available. Please add stocks.</td></tr>';
   } else {
     stocks.forEach((stock) => {
-      const row = `<tr>
-                          <td>${stock.tickerSymbol}</td>
-                          <td>${stock.companyName}</td>
-                          <td>${stock.price}</td>
-                          <td>${stock.quantity}</td>
-                          <td>${stock.totalValue}</td>
-                       </tr>`;
+      const row = `
+          <tr>
+              <td data-column="tickerSymbol">${stock.tickerSymbol}</td>
+              <td data-column="companyName">${stock.companyName}</td>
+              <td data-column="buyPrice">${stock.price.toFixed(2)}</td>
+              <td data-column="quantity">${stock.quantity.toFixed(2)}</td>
+              <td data-column="totalValue">${stock.totalValue.toFixed(2)}</td>
+          </tr>`;
       tableBody.innerHTML += row;
     });
   }
