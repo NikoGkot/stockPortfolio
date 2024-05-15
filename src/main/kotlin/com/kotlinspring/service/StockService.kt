@@ -2,6 +2,7 @@ package com.kotlinspring.service
 
 import com.kotlinspring.dto.StockDTO
 import com.kotlinspring.entity.Stock
+import com.kotlinspring.exception.InsufficientStockQuantityException
 import com.kotlinspring.exception.StockNotFoundException
 import com.kotlinspring.repository.StockRepository
 import jakarta.transaction.Transactional
@@ -18,14 +19,14 @@ class StockService(
     fun addStock(stockDTO: StockDTO): StockDTO {
 
         val stockEntity = stockDTO.let {
-            Stock(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)
+            Stock(it.tickerSymbol, it.companyName, it.price, it.quantity)
         }
 
         stockRepository.save(stockEntity)
 
         logger.info { "Saved stock is: $stockEntity" }
         return stockEntity.let {
-            StockDTO(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)
+            StockDTO(it.tickerSymbol, it.companyName, it.price, it.quantity)
         }
     }
 
@@ -37,14 +38,14 @@ class StockService(
         val stocks = stockRepository.findAll()
         return stocks
             .map {
-                StockDTO(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)
+                StockDTO(it.tickerSymbol, it.companyName, it.price, it.quantity)
             }
     }
 
     fun getStockByTickerSymbol(tickerSymbol: String): StockDTO {
         val stock = stockRepository.findByTickerSymbol(tickerSymbol)
-            ?: throw Exception("Stock not found") // Handle not found case appropriately
-        return StockDTO(stock.tickerSymbol, stock.companyName, stock.buyPrice, stock.quantity)
+            ?: throw StockNotFoundException("No stock found for ticker symbol: $tickerSymbol")
+        return StockDTO(stock.tickerSymbol, stock.companyName, stock.price, stock.quantity)
     }
 
     fun updateStock(stockTickerSymbol: String, stockDTO: StockDTO): StockDTO {
@@ -54,10 +55,10 @@ class StockService(
             existingStock.get()
                 .let {
                     it.companyName = stockDTO.companyName
-                    it.buyPrice = stockDTO.buyPrice
+                    it.price = stockDTO.price
                     it.quantity = stockDTO.quantity
                     stockRepository.save(it)
-                    StockDTO(it.tickerSymbol, it.companyName, it.buyPrice, it.quantity)
+                    StockDTO(it.tickerSymbol, it.companyName, it.price, it.quantity)
                 }
         } else {
             throw StockNotFoundException("No stock found for ticker symbol: $stockTickerSymbol")
@@ -84,20 +85,43 @@ class StockService(
 
         // Update the existing stock with the new buy price and quantity
         val newTotalQuantity = existingStock.quantity + stockDTO.quantity
-        val newAveragePrice = ((existingStock.buyPrice * existingStock.quantity) +
-                (stockDTO.buyPrice * stockDTO.quantity)) / newTotalQuantity
+        val newAveragePrice = ((existingStock.price * existingStock.quantity) +
+                (stockDTO.price * stockDTO.quantity)) / newTotalQuantity
 
         existingStock.quantity = newTotalQuantity
-        existingStock.buyPrice = newAveragePrice
+        existingStock.price = newAveragePrice
 
         stockRepository.save(existingStock)
 
         return StockDTO(
             tickerSymbol = existingStock.tickerSymbol,
             companyName = existingStock.companyName,
-            buyPrice = existingStock.buyPrice,
+            price = existingStock.price,
             quantity = existingStock.quantity
         )
+    }
+
+    @Transactional
+    fun sellStock(tickerSymbol: String, stockDTO: StockDTO): StockDTO{
+        val existingStock = stockRepository.findByTickerSymbol(tickerSymbol)
+            ?: throw StockNotFoundException("No stock found for ticker symbol: $tickerSymbol")
+        // Update the existing stock with the new quantity
+        if (stockDTO.quantity > existingStock.quantity){
+            throw InsufficientStockQuantityException("You don't have enough stock quantity to sell. Current stock quantity: ${existingStock.quantity}")
+        }
+        val newTotalQuality = existingStock.quantity - stockDTO.quantity
+
+        existingStock.quantity = newTotalQuality
+
+        stockRepository.save(existingStock)
+
+        return StockDTO(
+            tickerSymbol = existingStock.tickerSymbol,
+            companyName = existingStock.companyName,
+            price = existingStock.price,
+            quantity = existingStock.quantity
+        )
+
     }
 
 }

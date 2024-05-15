@@ -54,5 +54,14 @@ class StockController(val stockService: StockService) {
         return stockService.buyStock(tickerSymbol, stockDTO)
     }
 
+    @PutMapping("/{tickerSymbol}/sell")
+    @ResponseStatus(HttpStatus.OK)
+    fun sellStock(
+        @PathVariable tickerSymbol: String,
+        @RequestBody @Valid stockDTO: StockDTO
+    ): StockDTO {
+        return stockService.sellStock(tickerSymbol, stockDTO)
+    }
+
 
 }
