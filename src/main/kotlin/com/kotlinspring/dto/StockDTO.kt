@@ -4,7 +4,7 @@ import com.kotlinspring.entity.Stock
 
 data class StockDTO(
         val tickerSymbol: String,
-        var companyName: String,
+        var companyName: String = "",
         var price : Double = 0.0, //Default Value
         var quantity : Double = 0.0,
         val totalValue : Double = quantity * price
