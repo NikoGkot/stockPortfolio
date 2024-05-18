@@ -10,8 +10,8 @@ data class Stock(
     @Id
     val tickerSymbol: String,
     var companyName: String,
-    var price: Double,
-    var quantity: Double
+    var price: Double = 0.0,
+    var quantity: Double = 0.0
 //        var currentPrice : BigDecimal?,
 //        var lastPriceUpdate : LocalDateTime?
 ) {

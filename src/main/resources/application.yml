@@ -8,7 +8,7 @@ spring:
     #    password: password
 
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5438/stocks
+    url: jdbc:postgresql://localhost:5438/portfolio
     username: postgres
     password: postgres
   jpa:

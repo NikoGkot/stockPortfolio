@@ -4,7 +4,7 @@ spring:
   datasource:
 
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5438/stocks_test
+    url: jdbc:postgresql://localhost:5438/portfolio_test
     username: postgres
     password: postgres
   jpa:
