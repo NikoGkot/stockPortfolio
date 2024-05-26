@@ -1,10 +1,17 @@
 function getJwtToken() {
-  const token = localStorage.getItem("jwtToken");
-  console.log("Retrieved JWT Token:", token);
+  // console.log("Retrieving JWT Token from localStorage"); // Debug statement
+  const token = localStorage.getItem("accessToken");
+  // console.log("Retrieved JWT Token:", token); // Log the token
   return token;
 }
+
 async function fetchStocks() {
   const token = getJwtToken();
+  if (!token) {
+    console.error("No JWT Token found"); // Log an error if the token is null
+    throw new Error("No JWT Token found");
+  }
+
   const response = await fetch("http://localhost:8080/api/stocks", {
     method: "GET",
     headers: {
@@ -21,18 +28,6 @@ async function fetchStocks() {
   const stocks = await response.json();
   return stocks;
 }
-
-document.getElementById("addStockButton").addEventListener("click", () => {
-  loadModal("addStock.html", "#addStockModal");
-});
-
-document.getElementById("buyStockButton").addEventListener("click", () => {
-  loadModal("buyStock.html", "#buyStockModal");
-});
-
-document.getElementById("sellStockButton").addEventListener("click", () => {
-  loadModal("sellStock.html", "#sellStockModal");
-});
 
 async function loadModal(url, modalId) {
   const response = await fetch(url);
@@ -108,12 +103,15 @@ async function buyStock() {
     quantity: quantity,
   };
 
+  const token = getJwtToken();
+
   try {
     const response = await fetch(
       `http://localhost:8080/stocks/${tickerSymbol}/buy`,
       {
         method: "PUT",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(stockDTO),
@@ -144,12 +142,15 @@ async function sellStock() {
     quantity: quantity,
   };
 
+  const token = getJwtToken();
+
   try {
     const response = await fetch(
       `http://localhost:8080/stocks/${tickerSymbol}/sell`,
       {
         method: "PUT",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(stockDTO),
@@ -205,17 +206,19 @@ async function populateTickerDropdowns(modalId) {
   tickerDropdown.innerHTML = tickerOptions;
 }
 
-// document.addEventListener("DOMContentLoaded", displayStocks);
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const stocks = await fetchStocks();
-    // Process and display stocks
-    displayStocks(stocks);
-  } catch (error) {
-    console.error(error);
-    alert("Failed to fetch stocks");
-  }
-});
+document.addEventListener("DOMContentLoaded", displayStocks);
 
 // Polling example: Refresh data every 10 seconds
 setInterval(displayStocks, 10000);
+
+document.getElementById("addStockButton").addEventListener("click", () => {
+  loadModal("addStock.html", "#addStockModal");
+});
+
+document.getElementById("buyStockButton").addEventListener("click", () => {
+  loadModal("buyStock.html", "#buyStockModal");
+});
+
+document.getElementById("sellStockButton").addEventListener("click", () => {
+  loadModal("sellStock.html", "#sellStockModal");
+});

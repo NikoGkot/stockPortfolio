@@ -31,6 +31,14 @@ document
             result.accessToken,
             result.refreshToken
           ); // Log the tokens
+          console.log(
+            "Stored accessToken:",
+            localStorage.getItem("accessToken")
+          ); // Verify stored token
+          console.log(
+            "Stored refreshToken:",
+            localStorage.getItem("refreshToken")
+          ); // Verify stored token
 
           // Redirect to the index page
           window.location.href = "/html/index.html";
