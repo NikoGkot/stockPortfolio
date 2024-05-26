@@ -1,5 +1,23 @@
+function getJwtToken() {
+  const token = localStorage.getItem("jwtToken");
+  console.log("Retrieved JWT Token:", token);
+  return token;
+}
 async function fetchStocks() {
-  const response = await fetch("http://localhost:8080/stocks");
+  const token = getJwtToken();
+  const response = await fetch("http://localhost:8080/api/stocks", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    console.error("Error Response:", response); // Log the error response
+    throw new Error("Failed to fetch stocks");
+  }
+
   const stocks = await response.json();
   return stocks;
 }
@@ -54,10 +72,13 @@ async function addStock() {
     quantity: 0.0,
   };
 
+  const token = getJwtToken();
+
   try {
-    const response = await fetch("http://localhost:8080/stocks", {
+    const response = await fetch("http://localhost:8080/api/stocks", {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(stockDTO),
@@ -184,7 +205,17 @@ async function populateTickerDropdowns(modalId) {
   tickerDropdown.innerHTML = tickerOptions;
 }
 
-document.addEventListener("DOMContentLoaded", displayStocks);
+// document.addEventListener("DOMContentLoaded", displayStocks);
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const stocks = await fetchStocks();
+    // Process and display stocks
+    displayStocks(stocks);
+  } catch (error) {
+    console.error(error);
+    alert("Failed to fetch stocks");
+  }
+});
 
 // Polling example: Refresh data every 10 seconds
 setInterval(displayStocks, 10000);
