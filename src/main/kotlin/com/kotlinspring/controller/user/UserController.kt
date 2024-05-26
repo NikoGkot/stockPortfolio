@@ -9,16 +9,19 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/user")
-class UserController (
+class UserController(
     private val userService: UserService
 
-){
+) {
     @PostMapping
-    fun create(@RequestBody userRequest: UserRequest): UserResponse =
-        userService.createUser(
-            userEntity = userRequest.toModel()
+    fun create(@RequestBody userRequest: UserRequest): UserResponse {
+        return userService.createUser(
+//            userEntity = userRequest.toModel()
+            userRequest
         )?.toResponse()
             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot create a user.")
+
+    }
 
     @GetMapping
     fun listAll(): List<UserResponse> =
@@ -34,7 +37,7 @@ class UserController (
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteById(@PathVariable id: Long){
+    fun deleteById(@PathVariable id: Long) {
         val success = userService.deleteById(id)
     }
 

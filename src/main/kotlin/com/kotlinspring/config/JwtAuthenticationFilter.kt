@@ -52,9 +52,9 @@ class JwtAuthenticationFilter(
     }
 
     private fun String?.doesNotContainBearerToken(): Boolean {
-        return this == null || !this.startsWith("Bearer")
+        return this == null || !this.startsWith("Bearer ")
     }
 
     private fun String.extractTokenValue(): String =
-        this.substringAfter("Bearer")
+        this.substringAfter("Bearer ").trim()
 }

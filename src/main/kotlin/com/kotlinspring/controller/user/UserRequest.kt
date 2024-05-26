@@ -9,6 +9,7 @@ import com.kotlinspring.entity.UserEntity
 data class UserRequest(
     val username: String,
     val password: String,
+    val roles: String
 )
 fun UserRequest.toModel(): UserEntity {
     return UserEntity(
