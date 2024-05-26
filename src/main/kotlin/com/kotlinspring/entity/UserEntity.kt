@@ -10,7 +10,7 @@ data class UserEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
-    val id: Long,
+    val id: Long = 0,
 
     val username: String,
     val password: String,
@@ -21,8 +21,12 @@ data class UserEntity(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    val roles: Set<Role> = HashSet()
+    val roles: Set<Role?> = HashSet()
     //Set because of uniqueness constraint for roles and due to performance
 
 
-) {}
+) {
+
+}
+
+

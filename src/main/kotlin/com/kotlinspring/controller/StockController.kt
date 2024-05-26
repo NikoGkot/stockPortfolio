@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("stocks")
+@RequestMapping("/api/stocks")
 @Validated
 class StockController(val stockService: StockService) {
 

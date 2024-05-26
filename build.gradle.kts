@@ -29,14 +29,15 @@ dependencies {
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.postgresql:postgresql")
 
-	//security
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	testImplementation("org.springframework.security:spring-security-test")
-	//passwordEncoder
-	implementation("org.springframework.security:spring-security-core")
+//	//security
+//	implementation("org.springframework.boot:spring-boot-starter-security")
+//	testImplementation("org.springframework.security:spring-security-test")
+//	//passwordEncoder
+//	implementation("org.springframework.security:spring-security-core")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 
 	testImplementation("io.mockk:mockk:1.10.4")
 	testImplementation("com.ninja-squad:springmockk:3.0.1")
