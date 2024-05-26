@@ -6,18 +6,18 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class UserService (
+class UserService(
     private val userRepository: UserRepository
 ) {
     fun findAll(): List<UserEntity> = userRepository.findAll()
 
-    fun createUser(userEntity: UserEntity) : UserEntity? {
+    fun createUser(userEntity: UserEntity): UserEntity? {
         val found = userRepository.findByUsername(userEntity.username)
 
-        return if(found==null){
+        return if (found == null) {
             userRepository.save(userEntity)
             userEntity
-        }else null
+        } else null
     }
 
     fun findById(id: Long): UserEntity? {
@@ -28,8 +28,7 @@ class UserService (
         userRepository.findByUsername(username)
 
     fun deleteById(id: Long) {
-
-            userRepository.deleteById(id)
-
+        userRepository.deleteById(id)
     }
+
 }
