@@ -33,7 +33,8 @@ class AuthenticationService(
 
         return AuthenticationResponse(
             accessToken = accessToken,
-            refreshToken = refreshToken
+            refreshToken = refreshToken,
+            redirectUrl = "/index.html"
         )
     }
 
