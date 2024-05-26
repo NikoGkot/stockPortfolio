@@ -107,7 +107,7 @@ async function buyStock() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/stocks/${tickerSymbol}/buy`,
+      `http://localhost:8080/api/stocks/${tickerSymbol}/buy`,
       {
         method: "PUT",
         headers: {
@@ -146,7 +146,7 @@ async function sellStock() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/stocks/${tickerSymbol}/sell`,
+      `http://localhost:8080/api/stocks/${tickerSymbol}/sell`,
       {
         method: "PUT",
         headers: {
