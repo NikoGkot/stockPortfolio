@@ -1,3 +1,6 @@
+let currentSortedColumn = null;
+let currentSortOrder = "asc";
+
 function getJwtToken() {
   // console.log("Retrieving JWT Token from localStorage"); // Debug statement
   const token = localStorage.getItem("accessToken");
@@ -170,10 +173,36 @@ async function sellStock() {
   }
 }
 
-async function displayStocks() {
+async function displayStocks(sortedColumn = null, sortOrder = "asc") {
   const stocks = await fetchStocks();
   const tableBody = document.querySelector("#stocks-table tbody");
   tableBody.innerHTML = ""; // Clear the table
+
+  // Update the current sorting state
+  if (sortedColumn) {
+    currentSortedColumn = sortedColumn;
+    currentSortOrder = sortOrder;
+  }
+
+  if (currentSortedColumn) {
+    stocks.sort((a, b) => {
+      let aValue = a[currentSortedColumn];
+      let bValue = b[currentSortedColumn];
+
+      if (typeof aValue === "string") {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
+      }
+
+      if (aValue < bValue) {
+        return currentSortOrder === "asc" ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return currentSortOrder === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
+  }
 
   if (stocks.length === 0) {
     tableBody.innerHTML =
@@ -206,10 +235,22 @@ async function populateTickerDropdowns(modalId) {
   tickerDropdown.innerHTML = tickerOptions;
 }
 
-document.addEventListener("DOMContentLoaded", displayStocks);
+document.addEventListener("DOMContentLoaded", () => {
+  displayStocks();
 
-// Polling example: Refresh data every 10 seconds
-setInterval(displayStocks, 10000);
+  document.querySelectorAll("#stocks-table th").forEach((header) => {
+    header.addEventListener("click", () => {
+      const column = header.getAttribute("data-column");
+      const currentSortOrder = header.getAttribute("data-sort-order") || "asc";
+      const newSortOrder = currentSortOrder === "asc" ? "desc" : "asc";
+      header.setAttribute("data-sort-order", newSortOrder);
+      displayStocks(column, newSortOrder);
+    });
+  });
+});
+
+// Polling example: Refresh data every 10 seconds, maintaining the current sorting state
+setInterval(() => displayStocks(currentSortedColumn, currentSortOrder), 10000);
 
 document.getElementById("addStockButton").addEventListener("click", () => {
   loadModal("addStock.html", "#addStockModal");
