@@ -14,6 +14,7 @@ class UserController(
 
 ) {
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody userRequest: UserRequest): UserResponse {
         return userService.createUser(
 //            userEntity = userRequest.toModel()
@@ -24,6 +25,7 @@ class UserController(
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     fun listAll(): List<UserResponse> =
         userService.findAll()
             .map { it.toResponse() }

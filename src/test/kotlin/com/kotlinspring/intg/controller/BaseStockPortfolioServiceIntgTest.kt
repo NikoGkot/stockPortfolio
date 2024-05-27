@@ -1,14 +1,17 @@
 package com.kotlinspring.intg.controller
 
 import com.kotlinspring.repository.StockRepository
+import com.kotlinspring.service.TokenService
 import com.kotlinspring.util.StockBuilder
 import com.kotlinspring.util.stockEntityList
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.util.*
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -21,11 +24,38 @@ abstract class BaseStockPortfolioServiceIntgTest {
     @Autowired
     lateinit var stockRepository: StockRepository
 
+    @Autowired
+    lateinit var tokenService: TokenService
+
+    lateinit var jwtToken: String
+
+    @BeforeEach
+    fun setup() {
+        // Generate or fetch a valid JWT token
+        val userDetails = createTestUserDetails()
+        jwtToken = tokenService.generate(
+            userDetails = userDetails,
+            expirationDate = Date(System.currentTimeMillis() + 3600000) // 1 hour expiration
+        )
+    }
+
+    private fun createTestUserDetails(): UserDetails {
+        return org.springframework.security.core.userdetails.User.withUsername("testuser")
+            .password("password")
+            .roles("ADMIN")
+            .build()
+    }
+
+    fun WebTestClient.RequestHeadersSpec<*>.withJwt(): WebTestClient.RequestHeadersSpec<*> =
+        this.header("Authorization", "Bearer $jwtToken")
+
     @BeforeEach
     fun setUp(){
+
         stockRepository.deleteAll()
         val stocks = stockEntityList()
         stockRepository.saveAll(stocks)
+
     }
 
     val stockEntity = StockBuilder().build()
