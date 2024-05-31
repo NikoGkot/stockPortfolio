@@ -3,6 +3,7 @@ package com.kotlinspring.service
 import com.kotlinspring.dto.StockDTO
 import com.kotlinspring.dto.toDTO
 import com.kotlinspring.entity.Stock
+import com.kotlinspring.exception.InsufficientFundsException
 import com.kotlinspring.exception.InsufficientStockQuantityException
 import com.kotlinspring.exception.StockNotFoundException
 import com.kotlinspring.repository.StockRepository
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class StockService(
-    val stockRepository: StockRepository
+    private val stockRepository: StockRepository,
+    private val cashService: CashService
 ) {
 
     companion object : KLogging()
@@ -81,6 +83,12 @@ class StockService(
     fun buyStock(tickerSymbol: String, stockDTO: StockDTO): StockDTO {
         val existingStock = stockRepository.findByTickerSymbol(tickerSymbol)
             ?: throw StockNotFoundException("No stock found for ticker symbol: $tickerSymbol")
+        val totalCost = stockDTO.price * stockDTO.quantity
+        val currentBalance = cashService.getBalance()
+        if (currentBalance < totalCost){
+            throw InsufficientFundsException("Not enough cash to complete purchase")
+        }
+        cashService.withdraw(totalCost)
 
         // Update the existing stock with the new buy price and quantity
         val newTotalQuantity = existingStock.quantity + stockDTO.quantity
@@ -104,15 +112,19 @@ class StockService(
     fun sellStock(tickerSymbol: String, stockDTO: StockDTO): StockDTO{
         val existingStock = stockRepository.findByTickerSymbol(tickerSymbol)
             ?: throw StockNotFoundException("No stock found for ticker symbol: $tickerSymbol")
+
         // Update the existing stock with the new quantity
         if (stockDTO.quantity > existingStock.quantity){
             throw InsufficientStockQuantityException("You don't have enough stock quantity to sell. Current stock quantity: ${existingStock.quantity}")
         }
+        val totalRevenue = stockDTO.quantity * stockDTO.price
         val newTotalQuality = existingStock.quantity - stockDTO.quantity
 
         existingStock.quantity = newTotalQuality
 
         stockRepository.save(existingStock)
+
+        cashService.deposit(totalRevenue)
 
         return StockDTO(
             tickerSymbol = existingStock.tickerSymbol,
