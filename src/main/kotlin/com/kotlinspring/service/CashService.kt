@@ -4,6 +4,7 @@ import com.kotlinspring.dto.CashDTO
 import com.kotlinspring.dto.toDTO
 import com.kotlinspring.entity.Cash
 import com.kotlinspring.exception.AlreadyInitializedException
+import com.kotlinspring.exception.CashNotInitializedException
 import com.kotlinspring.repository.CashRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -38,20 +39,24 @@ class CashService(
     }
 
     @Transactional
-    fun deposit(amount: Double) {
-        val cash = cashRepository.findTopByOrderByIdAsc() ?: Cash(id = 0, amount = 0.0)
-//        cash.amount += amount
+    fun deposit(amount: Double): CashDTO {
+        val cash = cashRepository.findTopByOrderByIdAsc() ?: throw CashNotInitializedException("Cash record not found")
+        cash.amount += amount
         cashRepository.save(cash)
+
+        return cash.toDTO()
     }
 
     @Transactional
-    fun withdraw(amount: Double) {
-        val cash = cashRepository.findTopByOrderByIdAsc() ?: throw IllegalArgumentException("Cash record not found")
+    fun withdraw(amount: Double): CashDTO {
+        val cash = cashRepository.findTopByOrderByIdAsc() ?: throw CashNotInitializedException("Cash record not found")
         if (cash.amount < amount) {
             throw IllegalArgumentException("Insufficient funds")
         }
         cash.amount -= amount
         cashRepository.save(cash)
+
+        return cash.toDTO()
     }
 
     @Transactional

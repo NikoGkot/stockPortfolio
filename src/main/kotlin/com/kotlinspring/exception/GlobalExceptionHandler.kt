@@ -25,6 +25,15 @@ class GlobalExceptionHandler {
 
         return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)    }
 
+    @ExceptionHandler(CashNotInitializedException::class)
+    fun handleCashNotInitializedException(ex:CashNotInitializedException): ResponseEntity<ErrorResponse>{
+        val errorResponse = ErrorResponse(
+            status = HttpStatus.BAD_REQUEST.value(),
+            message = ex.message ?: "Cash register has not been initialized! Try initialize instead"
+        )
+        return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
+    }
+
     data class ErrorResponse(
         val status: Int,
         val message: String
