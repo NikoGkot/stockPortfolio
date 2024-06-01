@@ -8,6 +8,24 @@ function getJwtToken() {
   return token;
 }
 
+async function fetchBalance() {
+  const token = getJwtToken();
+  const response = await fetch("http://localhost:8080/api/cash/balance", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    console.error("Error Response:", response); // Log the error response
+    throw new Error("Failed to fetch stocks");
+  }
+
+  const balance = await response.json();
+  console.log("Fetched Balance:", balance); // Log the balance to verify it
+  return balance;
+}
 async function fetchStocks() {
   const token = getJwtToken();
   if (!token) {
@@ -173,6 +191,17 @@ async function sellStock() {
   }
 }
 
+async function updateBalance() {
+  try {
+    const balance = await fetchBalance();
+    console.log("Updating Balance with:", balance); // Log before updating the DOM
+    document.getElementById("balance-amount").innerText = balance.toFixed(2);
+  } catch (error) {
+    console.error("Error fetching balance:", error);
+    document.getElementById("balance-amount").innerText = "Error";
+  }
+}
+
 async function displayStocks(sortedColumn = null, sortOrder = "asc") {
   const stocks = await fetchStocks();
   const tableBody = document.querySelector("#stocks-table tbody");
@@ -236,6 +265,7 @@ async function populateTickerDropdowns(modalId) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  updateBalance();
   displayStocks();
 
   document.querySelectorAll("#stocks-table th").forEach((header) => {
@@ -251,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Polling example: Refresh data every 10 seconds, maintaining the current sorting state
 setInterval(() => displayStocks(currentSortedColumn, currentSortOrder), 10000);
+setInterval(updateBalance, 10000); // Refresh the balance every 10 seconds
 
 document.getElementById("addStockButton").addEventListener("click", () => {
   loadModal("addStock.html", "#addStockModal");
