@@ -26,7 +26,7 @@ class SecurityConfiguration(
             .authorizeHttpRequests {
                 it
 //                    .requestMatchers("/api/auth/**", "/login", "/css/**", "/js/**", "/img/**", "/")
-                    .requestMatchers("/", "/html/**", "/css/**", "/js/**", "/api/auth/**", "/login")
+                    .requestMatchers("/", "/html/**", "/css/**", "/js/**", "/api/auth/**", "/login", "api/role/**")
                     .permitAll()
                     .requestMatchers("/api/auth", "/api/auth/refresh", "/error")
                     .permitAll()

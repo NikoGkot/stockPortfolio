@@ -15,7 +15,7 @@ class CashController (
 
     @PostMapping("/initialize")
     @ResponseStatus(HttpStatus.CREATED)
-    fun deposit(@RequestParam cashDTO: CashDTO): CashDTO?{
+    fun deposit(@RequestBody cashDTO: CashDTO): CashDTO?{
         return cashService.initialize(cashDTO)
     }
 
