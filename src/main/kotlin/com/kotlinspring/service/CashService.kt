@@ -1,11 +1,10 @@
 package com.kotlinspring.service
 
 import com.kotlinspring.dto.CashDTO
-import com.kotlinspring.dto.DepositRequest
 import com.kotlinspring.dto.toDTO
 import com.kotlinspring.entity.Cash
+import com.kotlinspring.exception.AlreadyInitializedException
 import com.kotlinspring.repository.CashRepository
-import jakarta.annotation.PostConstruct
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
@@ -27,13 +26,15 @@ class CashService(
 
     fun initialize(cashDTO: CashDTO): CashDTO? {
         val found = cashRepository.findTopByOrderByIdAsc()
-        return if (found==null){
-            val cash = cashDTO.let{
+        return if (found == null) {
+            val cash = cashDTO.let {
                 Cash(it.id, it.amount)
             }
             cashRepository.save(cash)
             return cash.toDTO()
-        } else null
+        } else {
+            throw AlreadyInitializedException("Cash register has already been initialized. Try deposit instead")
+        }
     }
 
     @Transactional

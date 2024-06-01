@@ -15,13 +15,13 @@ class CashController (
 
     @PostMapping("/initialize")
     @ResponseStatus(HttpStatus.CREATED)
-    fun deposit(@RequestBody cashDTO: CashDTO): CashDTO?{
+    fun initialize(@RequestBody cashDTO: CashDTO): CashDTO?{
         return cashService.initialize(cashDTO)
     }
 
     @PutMapping("/withdraw")
     @ResponseStatus(HttpStatus.OK)
-    fun withdraw(@RequestParam amount: Double){
+    fun withdraw(@RequestBody amount: Double){
         cashService.withdraw(amount)
     }
 
