@@ -27,7 +27,7 @@ class StockService(
 
         stockRepository.save(stockEntity)
 
-        logger.info { "Saved stock is: $stockEntity" }
+        logger.info { "Saved stock is:  $stockEntity" }
         return stockEntity.toDTO()
     }
 

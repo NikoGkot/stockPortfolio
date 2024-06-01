@@ -1,5 +1,8 @@
 package com.kotlinspring.service
 
+import com.kotlinspring.dto.CashDTO
+import com.kotlinspring.dto.DepositRequest
+import com.kotlinspring.dto.toDTO
 import com.kotlinspring.entity.Cash
 import com.kotlinspring.repository.CashRepository
 import jakarta.annotation.PostConstruct
@@ -22,10 +25,21 @@ class CashService(
 //        }
 //    }
 
+    fun initialize(cashDTO: CashDTO): CashDTO? {
+        val found = cashRepository.findTopByOrderByIdAsc()
+        return if (found==null){
+            val cash = cashDTO.let{
+                Cash(it.id, it.amount)
+            }
+            cashRepository.save(cash)
+            return cash.toDTO()
+        } else null
+    }
+
     @Transactional
     fun deposit(amount: Double) {
-        val cash = cashRepository.findTopByOrderByIdAsc() ?: Cash(amount = 0.0)
-        cash.amount += amount
+        val cash = cashRepository.findTopByOrderByIdAsc() ?: Cash(id = 0, amount = 0.0)
+//        cash.amount += amount
         cashRepository.save(cash)
     }
 

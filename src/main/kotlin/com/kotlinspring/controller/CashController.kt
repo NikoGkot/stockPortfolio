@@ -1,7 +1,9 @@
 package com.kotlinspring.controller
 
+import com.kotlinspring.dto.CashDTO
 import com.kotlinspring.dto.DepositRequest
 import com.kotlinspring.service.CashService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -11,10 +13,10 @@ class CashController (
     private val cashService: CashService
 ){
 
-    @PostMapping("/deposit")
-    @ResponseStatus(HttpStatus.OK)
-    fun deposit(@RequestParam depositRequest: DepositRequest){
-        cashService.deposit(depositRequest.amount)
+    @PostMapping("/initialize")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun deposit(@RequestParam cashDTO: CashDTO): CashDTO?{
+        return cashService.initialize(cashDTO)
     }
 
     @PutMapping("/withdraw")
