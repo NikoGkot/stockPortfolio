@@ -76,6 +76,8 @@ class StockService(
         return if (existingStock.isPresent) {
             existingStock.get().let {
                 stockRepository.deleteById(stockTickerSymbol)
+                webSocketController.sendRefreshMessage()
+
             }
         } else {
             throw StockNotFoundException("No stock found for ticker symbol: $stockTickerSymbol")
