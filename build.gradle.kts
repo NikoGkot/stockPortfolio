@@ -46,6 +46,9 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("io.mockk:mockk:1.12.0")
 
+	//WebSockets
+	implementation("org.springframework.boot:spring-boot-starter-websocket")
+	implementation("org.springframework:spring-messaging")
 
 
 	testImplementation("com.ninja-squad:springmockk:3.0.1")

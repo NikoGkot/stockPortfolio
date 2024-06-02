@@ -1,5 +1,6 @@
 package com.kotlinspring.service
 
+import com.kotlinspring.controller.webSocket.WebSocketController
 import com.kotlinspring.dto.CashDTO
 import com.kotlinspring.dto.toDTO
 import com.kotlinspring.entity.Cash
@@ -7,11 +8,13 @@ import com.kotlinspring.exception.AlreadyInitializedException
 import com.kotlinspring.exception.CashNotInitializedException
 import com.kotlinspring.repository.CashRepository
 import jakarta.transaction.Transactional
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Service
 
 @Service
 class CashService(
-    private val cashRepository: CashRepository
+    private val cashRepository: CashRepository,
+    private val webSocketController: WebSocketController
 ) {
 
 //    private var cashBalance: Cash? = null
@@ -43,7 +46,7 @@ class CashService(
         val cash = cashRepository.findTopByOrderByIdAsc() ?: throw CashNotInitializedException("Cash record not found")
         cash.amount += amount
         cashRepository.save(cash)
-
+        webSocketController.sendRefreshMessage()
         return cash.toDTO()
     }
 
@@ -55,6 +58,9 @@ class CashService(
         }
         cash.amount -= amount
         cashRepository.save(cash)
+
+        webSocketController.sendRefreshMessage()
+
 
         return cash.toDTO()
     }

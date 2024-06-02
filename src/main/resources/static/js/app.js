@@ -103,7 +103,7 @@ async function addStock() {
     if (response.ok) {
       alert("Stock added successfully!");
       $("#addStockModal").modal("hide");
-      displayStocks(); // Refresh the stocks table
+      // stompClient.send("/app/update", {}, "updateStocks");
     } else {
       alert("Failed to add stock. Please try again.");
     }
@@ -142,8 +142,7 @@ async function buyStock() {
     if (response.ok) {
       alert("Stock bought successfully!");
       $("#buyStockModal").modal("hide");
-      updateBalance(); // Refresh the balance
-      displayStocks(); // Refresh the stocks table
+      // stompClient.send("/app/update", {}, "updateStocks");
     } else {
       alert("Failed to buy stock. Please try again.");
     }
@@ -182,8 +181,7 @@ async function sellStock() {
     if (response.ok) {
       alert("Stock sold successfully!");
       $("#sellStockModal").modal("hide");
-      updateBalance(); // Refresh the balance
-      displayStocks(); // Refresh the stocks table
+      // stompClient.send("/app/update", {}, "updateStocks");
     } else {
       alert("Failed to sell stock. Please try again.");
     }
@@ -269,6 +267,20 @@ async function populateTickerDropdowns(modalId) {
 document.addEventListener("DOMContentLoaded", () => {
   updateBalance();
   displayStocks();
+
+  // Set up WebSocket connection to listen for updates
+  const socket = new SockJS("/ws");
+  const stompClient = Stomp.over(socket);
+
+  stompClient.connect({}, (frame) => {
+    console.log("Connected: " + frame);
+    stompClient.subscribe("/topic/refresh", (message) => {
+      console.log("Received refresh message:", message.body);
+      // Call the functions to update balance and stocks
+      updateBalance();
+      displayStocks();
+    });
+  });
 
   document.querySelectorAll("#stocks-table th").forEach((header) => {
     header.addEventListener("click", () => {

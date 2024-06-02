@@ -30,6 +30,8 @@ class SecurityConfiguration(
                     .permitAll()
                     .requestMatchers("/api/auth", "/api/auth/refresh", "/error")
                     .permitAll()
+                    .requestMatchers("/ws/**","/topic/**")
+                    .permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/user")
                     .permitAll()
                     .requestMatchers("/api/user**")

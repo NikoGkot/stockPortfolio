@@ -1,5 +1,6 @@
 package com.kotlinspring.service
 
+import com.kotlinspring.controller.webSocket.WebSocketController
 import com.kotlinspring.dto.StockDTO
 import com.kotlinspring.dto.toDTO
 import com.kotlinspring.entity.Stock
@@ -14,7 +15,8 @@ import org.springframework.stereotype.Service
 @Service
 class StockService(
     private val stockRepository: StockRepository,
-    private val cashService: CashService
+    private val cashService: CashService,
+    private val webSocketController: WebSocketController
 ) {
 
     companion object : KLogging()
@@ -26,6 +28,8 @@ class StockService(
         }
 
         stockRepository.save(stockEntity)
+
+        webSocketController.sendRefreshMessage()
 
         logger.info { "Saved stock is:  $stockEntity" }
         return stockEntity.toDTO()
@@ -100,6 +104,8 @@ class StockService(
 
         stockRepository.save(existingStock)
 
+        webSocketController.sendRefreshMessage()
+
         return StockDTO(
             tickerSymbol = existingStock.tickerSymbol,
             companyName = existingStock.companyName,
@@ -123,6 +129,8 @@ class StockService(
         existingStock.quantity = newTotalQuality
 
         stockRepository.save(existingStock)
+
+        webSocketController.sendRefreshMessage()
 
         cashService.deposit(totalRevenue)
 
