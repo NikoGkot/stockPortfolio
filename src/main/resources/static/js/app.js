@@ -142,6 +142,7 @@ async function buyStock() {
     if (response.ok) {
       alert("Stock bought successfully!");
       $("#buyStockModal").modal("hide");
+      updateBalance(); // Refresh the balance
       displayStocks(); // Refresh the stocks table
     } else {
       alert("Failed to buy stock. Please try again.");
@@ -181,6 +182,7 @@ async function sellStock() {
     if (response.ok) {
       alert("Stock sold successfully!");
       $("#sellStockModal").modal("hide");
+      updateBalance(); // Refresh the balance
       displayStocks(); // Refresh the stocks table
     } else {
       alert("Failed to sell stock. Please try again.");
@@ -279,9 +281,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Polling example: Refresh data every 10 seconds, maintaining the current sorting state
-setInterval(() => displayStocks(currentSortedColumn, currentSortOrder), 10000);
-setInterval(updateBalance, 10000); // Refresh the balance every 10 seconds
+// // Polling example: Refresh data every 10 seconds, maintaining the current sorting state
+// setInterval(() => displayStocks(currentSortedColumn, currentSortOrder), 10000);
+// setInterval(updateBalance, 10000); // Refresh the balance every 10 seconds
 
 document.getElementById("addStockButton").addEventListener("click", () => {
   loadModal("addStock.html", "#addStockModal");
