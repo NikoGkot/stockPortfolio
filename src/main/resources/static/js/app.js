@@ -1,5 +1,6 @@
 let currentSortedColumn = null;
 let currentSortOrder = "asc";
+let stompClient = null;
 
 function getJwtToken() {
   // console.log("Retrieving JWT Token from localStorage"); // Debug statement
