@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/PortfolioDashboard.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <title>Portfolio Dashboard</title>
+  </head>
+  <body>
+    <header id="nav-header">
+      <nav class="navigation-bar" style="--items: 5">
+        <a class="navigation-item" href="#">Home</a>
+        <a class="navigation-item" href="#">Portfolio</a>
+        <a class="navigation-item" href="#">Budget</a>
+        <a class="navigation-item" href="#">Options</a>
+        <span class="line"></span>
+      </nav>
+    </header>
+    <div class="container">
+      <header>
+        <h1>Portfolio</h1>
+        <div class="sum">
+          <h2>10000$</h2>
+        </div>
+      </header>
+      <div class="overview">
+        <div class="label">Invested</div>
+        <div class="label">Return</div>
+        <div class="invested-amount">8000$</div>
+        <div class="return-amount">+2000$ (10%)</div>
+      </div>
+      <div class="graph-container">
+        <img src="../img/graph-placeholder.png" alt="graph" class="graph" />
+      </div>
+      <div class="period-buttons">
+        <button class="period-button">1D</button>
+        <button class="period-button">1W</button>
+        <button class="period-button">1M</button>
+        <button class="period-button">3M</button>
+        <button class="period-button">1Y</button>
+        <button class="period-button">MAX</button>
+      </div>
+      <div class="investments-container">
+        <div class="category">
+          <button class="category-button">Investments</button>
+          <button class="category-button">Pies</button>
+        </div>
+        <div class="command-bar">
+          <form>
+            <div class="search-bar">
+              <span class="material-symbols-outlined" id="search-symbol">
+                search
+              </span>
+              <input
+                class="search-input"
+                type="search"
+                placeholder="Search investments"
+              />
+            </div>
+          </form>
+          <button class="sort-button">
+            <span class="material-symbols-outlined" id="sort-symbol">
+              sort
+            </span>
+          </button>
+        </div>
+        <div class="investment">
+          <img
+            src="../img/google placeholder.png"
+            alt="company logo"
+            class="company-logo"
+          />
+          <div class="investment-details">
+            <div class="company-name">Google</div>
+            <div class="investment-worth">100.00$</div>
+            <div class="investment-quantity">10.00 SHARES</div>
+            <div class="investment-growth">+10.00$ (50.0%)</div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="footer">
+        <button class="navigation-button"></button>
+        <button class="navigation-button"></button>
+        <button class="navigation-button"></button>
+        <button class="navigation-button"></button>
+      </div> -->
+    </div>
+  </body>
+</html>

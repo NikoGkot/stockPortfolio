@@ -1,0 +1,206 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  background-color: black;
+  color: white;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.time {
+  font-size: 0.875rem;
+}
+
+.icons {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 1rem;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.plus-button {
+  background-color: #6b46c1;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+}
+
+.total-worth {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  font-size: 1.125rem;
+}
+
+.amount {
+  font-size: 2.25rem;
+  font-weight: bold;
+}
+
+.year-to-date {
+  /* display: grid;
+  grid-template-columns: auto 1fr auto; */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.ytd-button {
+  background-color: #3f3f46;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+}
+
+.growth {
+  color: #22c55e;
+}
+
+.percentage {
+  color: #22c55e;
+}
+
+.graph-container {
+  background-color: #3f3f46;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  /* margin-bottom: 1.5rem; */
+}
+
+.graph {
+  width: 100%;
+  height: 10rem;
+}
+
+.period-buttons {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  column-gap: 1rem;
+  padding: 1rem;
+  /* margin-bottom: 1.5rem; */
+}
+
+.period-button {
+  background-color: #3f3f46;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.period-button:active {
+  background-color: #fbbf24;
+  color: black;
+}
+
+.period-button.selected {
+  background-color: #fbbf24;
+  color: black;
+}
+
+.assets {
+  margin-bottom: 1.5rem;
+}
+
+.assets-label {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.assets-list {
+  background-color: #3f3f46;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  /* display: grid; */
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.assets-type {
+  text-align: center;
+}
+
+.asset-info {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  /* grid-auto-flow: column; */
+  /* align-items: center; */
+  column-gap: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+.asset-info > * {
+  /* border: 1px solid #ccc; */
+  /* border-radius: 0.5rem; */
+}
+
+.asset-name {
+  font-size: 1.3rem;
+  font-weight: normal;
+}
+
+.asset-amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: end;
+}
+
+.add-button {
+  background-color: #fbbf24;
+  color: black;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #27272a;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.footer-button {
+  text-align: center;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.footer-button .icon {
+  display: block;
+  margin: 0 auto 0.25rem;
+}
+
+.footer-button span {
+  display: block;
+}
