@@ -4,6 +4,12 @@
   font-family: sans-serif;
 }
 
+:root {
+  --header: 3rem;
+  --footer: 40px;
+  --main: calc(200vh - calc(var(--header) + var(--footer)));
+}
+
 .body,
 html {
   display: flex;
@@ -11,7 +17,7 @@ html {
   justify-content: center;
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: var(--main);
 }
 
 .container {
@@ -64,12 +70,19 @@ header h1 {
 .period-button {
   border-color: transparent;
   border-radius: 10px;
+}
+
+.period-button:hover {
   cursor: pointer;
 }
 
-.period-button:active {
+.period-button:focus {
   background-color: rgb(20, 24, 26);
 }
+
+/* .period-button:active {
+  background-color: rgb(20, 24, 26);
+} */
 
 .category {
   display: grid;
@@ -77,21 +90,31 @@ header h1 {
   column-gap: 20px;
   border-bottom: 1px solid #ccc;
   margin-bottom: 10px;
+  /* position: -webkit-sticky; */
   position: sticky;
+  top: 0px;
 }
 
 .category-button {
-  cursor: pointer;
   opacity: 0.5;
   border-bottom: 3px solid transparent;
   border-color: transparent;
   text-align: center;
 }
 
-.category-button:active {
+.category-button:hover {
+  cursor: pointer;
+}
+
+.category-button:focus {
   opacity: 1;
   border-bottom: 3px solid rgb(0, 167, 225);
 }
+
+/* .category-button:active {
+  opacity: 1;
+  border-bottom: 3px solid rgb(0, 167, 225);
+} */
 
 .command-bar {
   display: grid;
@@ -109,6 +132,11 @@ header h1 {
   background-color: rgb(20, 24, 26);
   /* border: 1px tra #ccc; */
   cursor: pointer;
+}
+
+.search-input:focus {
+  border-color: #fff;
+  color: #fff;
 }
 
 .search-input {
@@ -129,7 +157,6 @@ header h1 {
 
 .sort-button {
   --radius: 40px;
-  cursor: pointer;
   border: 1px solid #ccc;
   border-radius: 50%;
   width: var(--radius);
@@ -142,6 +169,7 @@ header h1 {
 .sort-button:hover {
   border-color: #fff; /* Change border color on hover */
   color: #fff; /* Change icon color on hover */
+  cursor: pointer;
 }
 
 .investment {
@@ -173,6 +201,13 @@ header h1 {
 .investment-growth {
   justify-self: end;
   color: green;
+}
+
+#nav-header {
+  /* position: -webkit-sticky;
+  position: sticky;
+  top: 0px; */
+  height: var(--header);
 }
 
 .navigation-bar {
