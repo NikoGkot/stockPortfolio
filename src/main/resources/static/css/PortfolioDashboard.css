@@ -1,5 +1,5 @@
 * {
-  background-color: black;
+  /* background-color: black; */
   color: azure;
   font-family: sans-serif;
 }
@@ -8,6 +8,8 @@
   --header: 3rem;
   --footer: 40px;
   --main: calc(200vh - calc(var(--header) + var(--footer)));
+  background-color: var(--background-color);
+  --background-color: black;
 }
 
 .body,
@@ -17,23 +19,26 @@ html {
   justify-content: center;
   margin: 0;
   padding: 0;
-  height: var(--main);
+  /* height: var(--main); */
 }
 
 .container {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(300px, auto);
   /* gap: 1rem; */
   /* width: 90%; */
-  max-width: 600px;
+  /* max-width: 600px; */
+
   margin: 0;
   padding: 10px;
+  margin: 5px;
   border: 0.25px solid rgb(204, 204, 204, 0.5);
 }
 
 header {
   display: grid;
   margin-bottom: 10px;
+  /* width: 320px; */
   /* margin: 10px; */
 }
 
@@ -58,6 +63,7 @@ header h1 {
 .graph {
   margin-left: -10px;
   margin-right: -10px;
+  /* width: 320px; */
 }
 
 .period-buttons {
@@ -70,6 +76,7 @@ header h1 {
 .period-button {
   border-color: transparent;
   border-radius: 10px;
+  background-color: var(--background-color);
 }
 
 .period-button:hover {
@@ -100,6 +107,7 @@ header h1 {
   border-bottom: 3px solid transparent;
   border-color: transparent;
   text-align: center;
+  background-color: var(--background-color);
 }
 
 .category-button:hover {
@@ -163,7 +171,7 @@ header h1 {
   height: var(--radius);
   align-self: center;
   /* border-color: transparent; */
-  /* background: none; */
+  background: none;
 }
 
 .sort-button:hover {
@@ -215,10 +223,16 @@ header h1 {
   background-image: linear-gradient(to bottom, #0003, transparent);
   border-bottom: 1px solid #0003;
   box-shadow: 0 0 32px #0003;
-  font-size: 2em;
+  font-size: 1.5rem;
   font-weight: 300;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  align-items: center;
+  justify-items: center;
 }
 
 .navigation-item {
   background: none;
+  height: 24px;
 }
