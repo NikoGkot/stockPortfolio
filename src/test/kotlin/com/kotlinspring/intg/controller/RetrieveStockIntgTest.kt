@@ -10,7 +10,7 @@ class RetrieveStockIntgTest :BaseStockPortfolioServiceIntgTest() {
     fun retrieveAllStocks() {
         val stockDTOs = webTestClient
             .get()
-            .uri("stocks")
+            .uri("/api/stocks")
             .exchange()
             .expectBodyList(StockDTO::class.java)
             .returnResult()
@@ -29,7 +29,7 @@ class RetrieveStockIntgTest :BaseStockPortfolioServiceIntgTest() {
 
         val stockDTOs = webTestClient
             .get()
-            .uri("stocks/{stock_tickerSymbol}", "EQQQ")
+            .uri("/api/stocks/{stock_tickerSymbol}", "EQQQ")
             .exchange()
             .expectStatus().isOk
             .expectBodyList(StockDTO::class.java)

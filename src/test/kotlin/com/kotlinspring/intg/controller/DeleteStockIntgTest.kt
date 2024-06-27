@@ -10,7 +10,7 @@ class DeleteStockIntgTest :BaseStockPortfolioServiceIntgTest() {
         stockRepository.save(stockEntity)
         webTestClient
             .delete()
-            .uri("/stocks/{tickerSymbol}", stockEntity.tickerSymbol)
+            .uri("/api/stocks/{tickerSymbol}", stockEntity.tickerSymbol)
             .exchange()
             .expectStatus().isNoContent
 
