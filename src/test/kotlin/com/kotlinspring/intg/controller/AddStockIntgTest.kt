@@ -12,7 +12,7 @@ class AddStockIntgTest : BaseStockPortfolioServiceIntgTest() {
             .post()
             .uri("/api/stocks")
             .bodyValue(stockDTO)
-            .headers { it.setBasicAuth("testuser", "testpassword") }
+//            .headers { it.setBasicAuth("testuser", "testpassword") }
             .exchange()
             .expectStatus().isCreated
             .expectBody(StockDTO::class.java)
@@ -23,24 +23,7 @@ class AddStockIntgTest : BaseStockPortfolioServiceIntgTest() {
             savedStockDTO!!.tickerSymbol == stockDTO.tickerSymbol
         }
     }
-//    @Test
-//    fun addStock() {
-//
-//        val savedStockDTO = webTestClient
-//            .post()
-//            .uri("stocks")
-//            .bodyValue(stockDTO)
-//            .exchange()
-//            .expectStatus().isCreated
-//            .expectBody(StockDTO::class.java)
-//            .returnResult()
-//            .responseBody
-//
-//        Assertions.assertTrue {
-//            savedStockDTO!!.tickerSymbol == stockDTO.tickerSymbol
-//        }
-//
-//    }
+
 
     @Test
     fun addStockWithoutBuyPrice() {

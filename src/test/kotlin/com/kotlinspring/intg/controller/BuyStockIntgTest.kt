@@ -17,7 +17,7 @@ class BuyStockIntgTest :BaseStockPortfolioServiceIntgTest() {
 
         val responseStockDTO = webTestClient
             .put()
-            .uri("/stocks/{tickerSymbol}/buy", existingStockTickerSymbol)
+            .uri("/api/stocks/{tickerSymbol}/buy", existingStockTickerSymbol)
             .bodyValue(stockDTO)
             .exchange()
             .expectStatus().isOk

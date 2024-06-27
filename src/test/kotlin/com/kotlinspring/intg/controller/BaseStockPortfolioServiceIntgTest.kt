@@ -4,7 +4,8 @@ import com.kotlinspring.TestSecurityConfig
 import com.kotlinspring.repository.StockRepository
 import com.kotlinspring.service.TokenService
 import com.kotlinspring.util.StockBuilder
-import com.kotlinspring.util.stockEntityList
+import com.kotlinspring.util.TestUtils
+import com.kotlinspring.util.TestUtils.Companion.stockEntityList
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -32,6 +33,9 @@ abstract class BaseStockPortfolioServiceIntgTest {
 
     lateinit var jwtToken: String
 
+    @Autowired
+    lateinit var testUtils: TestUtils
+
     @BeforeEach
     fun setup() {
         // Generate or fetch a valid JWT token
@@ -40,6 +44,9 @@ abstract class BaseStockPortfolioServiceIntgTest {
             userDetails = userDetails,
             expirationDate = Date(System.currentTimeMillis() + 3600000) // 1 hour expiration
         )
+
+        // Initialize cash balance
+        testUtils.initializeCashBalance()
     }
 
     private fun createTestUserDetails(): UserDetails {
