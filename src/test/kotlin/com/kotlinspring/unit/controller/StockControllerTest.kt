@@ -1,9 +1,10 @@
 // src/test/kotlin/com/kotlinspring/controller/StockControllerTest.kt
 package com.kotlinspring.unit.controller
 
+import com.kotlinspring.TestSecurityConfig
 import com.kotlinspring.controller.StockController
 import com.kotlinspring.service.StockService
-import com.kotlinspring.util.TestConfig
+//import com.kotlinspring.util.TestConfig
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -15,7 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(StockController::class)
-@Import(TestConfig::class)
+@Import(TestSecurityConfig::class)
 class StockControllerTest {
 
     @Autowired
