@@ -1,8 +1,9 @@
-package com.kotlinspring.dto
+package com.kotlinspring.dto.budget
 
 import com.kotlinspring.entity.TransactionEntity
 import jakarta.validation.constraints.Min
 import org.jetbrains.annotations.NotNull
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 
@@ -20,7 +21,7 @@ data class TransactionDTO (
     val transactionCategory: String?
 )
 
-fun TransactionEntity.toDTO(): TransactionDTO{
+fun TransactionEntity.toDTO(): TransactionDTO {
     return TransactionDTO(
         id = this.id,
         transactionDate = this.transactionDate,
@@ -30,3 +31,15 @@ fun TransactionEntity.toDTO(): TransactionDTO{
 
     )
 }
+
+data class DailyTransactionDTO(
+    val date: LocalDate,
+    val totalIncome: Double,
+    val totalExpense: Double
+)
+
+data class MonthlyTransactionDTO(
+    val month: Int,
+    val totalIncome: Double,
+    val totalExpense: Double
+)

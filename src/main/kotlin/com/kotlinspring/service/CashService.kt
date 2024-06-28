@@ -8,7 +8,6 @@ import com.kotlinspring.exception.AlreadyInitializedException
 import com.kotlinspring.exception.CashNotInitializedException
 import com.kotlinspring.repository.CashRepository
 import jakarta.transaction.Transactional
-import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Service
 
 @Service

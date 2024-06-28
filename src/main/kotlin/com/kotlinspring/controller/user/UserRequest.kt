@@ -1,9 +1,6 @@
 package com.kotlinspring.controller.user
 
-import com.kotlinspring.dto.StockDTO
-import com.kotlinspring.dto.toDTO
 import com.kotlinspring.entity.Role
-import com.kotlinspring.entity.Stock
 import com.kotlinspring.entity.UserEntity
 
 data class UserRequest(

@@ -1,15 +1,14 @@
 package com.kotlinspring.service
 
 import com.kotlinspring.controller.webSocket.WebSocketController
-import com.kotlinspring.dto.StockDTO
-import com.kotlinspring.dto.TransactionDTO
-import com.kotlinspring.dto.toDTO
+import com.kotlinspring.dto.budget.DailyTransactionDTO
+import com.kotlinspring.dto.budget.TransactionDTO
+import com.kotlinspring.dto.budget.toDTO
 import com.kotlinspring.entity.TransactionEntity
 import com.kotlinspring.exception.NotFoundException
-import com.kotlinspring.exception.StockNotFoundException
-import com.kotlinspring.exception.TransactionNotFoundException
 import com.kotlinspring.repository.TransactionRepository
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 
 @Service
@@ -17,7 +16,7 @@ class TransactionService(
     private val transactionRepository: TransactionRepository,
     private val webSocketController: WebSocketController
 ) {
-    fun createTransaction(transactionDTO: TransactionDTO):TransactionDTO{
+    fun createTransaction(transactionDTO: TransactionDTO): TransactionDTO {
         val transactionEntity = transactionDTO.let{
             TransactionEntity(it.id, it.transactionDate, it.transactionType, it.amount, it.transactionCategory)
         }
@@ -71,5 +70,19 @@ class TransactionService(
         val transactions = transactionRepository.findByTransactionType(transactionType)
         return transactions.map { it.toDTO() }
 
+    }
+
+    //Analytics
+
+    fun getDailyTransactions(startDate: LocalDateTime, endDate: LocalDateTime): List<DailyTransactionDTO>{
+        val transactions = transactionRepository.findByTransactionDateBetween(startDate, endDate)
+        return transactions.groupBy { it.transactionDate.toLocalDate() }
+            .map{(date, transactions) ->
+                DailyTransactionDTO(
+                    date = date,
+                    totalIncome = transactions.filter { it.transactionType == "INCOME" }.sumOf { it.amount },
+                    totalExpense = transactions.filter { it.transactionType == "EXPENSE" }.sumOf { it.amount }
+                )
+            }
     }
 }
