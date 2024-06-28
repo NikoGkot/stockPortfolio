@@ -21,4 +21,6 @@ interface TransactionRepository: JpaRepository<TransactionEntity, Long> {
         @Param("endDate")endDate: LocalDateTime
     ): List<TransactionEntity>
 
+    fun findByTransactionDateBetweenAndTransactionType(startDate: LocalDateTime, endDate: LocalDateTime, transactionType: String): List<TransactionEntity>
+
 }

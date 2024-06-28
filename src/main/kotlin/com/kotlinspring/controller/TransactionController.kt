@@ -1,6 +1,7 @@
 package com.kotlinspring.controller
 
 import com.kotlinspring.dto.budget.DailyTransactionDTO
+import com.kotlinspring.dto.budget.MonthlyTransactionDTO
 import com.kotlinspring.dto.budget.TransactionDTO
 import com.kotlinspring.service.TransactionService
 import jakarta.validation.Valid
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
+import java.time.Year
 
 
 @RestController
@@ -54,5 +56,21 @@ class TransactionController(val transactionService: TransactionService) {
     ): List<DailyTransactionDTO>
     {
         return transactionService.getDailyTransactions(startDate, endDate)
+    }
+
+    @GetMapping("/monthly")
+    fun getMonthlyTransactions(
+        @RequestParam year: Int
+    ): List<MonthlyTransactionDTO>
+    {
+        return transactionService.getMonthlyTransactions(year)
+    }
+
+    @GetMapping("/expense-income-ratio")
+    fun getExpenseToIncomeRatio(
+        @RequestParam startDate: LocalDateTime,
+        @RequestParam endDate: LocalDateTime
+    ): Double {
+        return transactionService.getExpenseToIncomeRatio(startDate,endDate)
     }
 }

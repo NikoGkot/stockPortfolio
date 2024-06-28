@@ -2,6 +2,7 @@ package com.kotlinspring.service
 
 import com.kotlinspring.controller.webSocket.WebSocketController
 import com.kotlinspring.dto.budget.DailyTransactionDTO
+import com.kotlinspring.dto.budget.MonthlyTransactionDTO
 import com.kotlinspring.dto.budget.TransactionDTO
 import com.kotlinspring.dto.budget.toDTO
 import com.kotlinspring.entity.TransactionEntity
@@ -84,5 +85,27 @@ class TransactionService(
                     totalExpense = transactions.filter { it.transactionType == "EXPENSE" }.sumOf { it.amount }
                 )
             }
+    }
+
+    fun getMonthlyTransactions(year: Int): List<MonthlyTransactionDTO>{
+        val startDate = LocalDateTime.of(year, 1,1,0,0)
+        val endDate = LocalDateTime.of(year, 12,31,23,59,59)
+        val transactions = transactionRepository.findByTransactionDateBetween(startDate,endDate)
+        return (1..12).map { month ->
+            val monthTransactions = transactions.filter { it.transactionDate.monthValue == month }
+            MonthlyTransactionDTO(
+                month = month,
+                totalIncome = monthTransactions.filter { it.transactionType == "INCOME" }.sumOf { it.amount },
+                totalExpense = monthTransactions.filter { it.transactionType == "EXPENSE" }.sumOf { it.amount }
+            )
+        }
+    }
+
+    fun getExpenseToIncomeRatio(startDate: LocalDateTime, endDate: LocalDateTime): Double{
+        val income = transactionRepository.findByTransactionDateBetweenAndTransactionType(startDate, endDate, "INCOME")
+            .sumOf { it.amount }
+        val expense = transactionRepository.findByTransactionDateBetweenAndTransactionType(startDate, endDate, "EXPENSE")
+            .sumOf { it.amount }
+        return if (income > 0) expense / income else 0.0 //will need to adjust this depending on what I want to show in the frontend
     }
 }
